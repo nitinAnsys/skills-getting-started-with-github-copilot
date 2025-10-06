@@ -19,6 +19,7 @@
           <!-- Activities will be loaded here -->
           <p>Loading activities...</p>
         </div>
+        <div id="activities"></div>
       </section>
 
       <section id="signup-container">
@@ -46,5 +47,88 @@
     </footer>
 
     <script src="app.js"></script>
+    <script>
+      function renderActivities(activities) {
+        const container = document.getElementById('activities');
+        container.innerHTML = '';
+        activities.forEach(activity => {
+            const card = document.createElement('div');
+            card.className = 'activity-card';
+
+            const details = activity.details; // Assuming activity object has a details property
+            const name = activity.name;
+
+            const spotsLeft = details.max_participants - details.participants.length;
+
+            // Participants section as a pretty bulleted list
+            let participantsHTML = "";
+            if (details.participants.length > 0) {
+              participantsHTML = `
+                <div class="participants-section">
+                  <h5>Participants</h5>
+                  <ul class="participants-list">
+                    ${details.participants.map(email => `<li>${email}</li>`).join("")}
+                  </ul>
+                </div>
+              `;
+            } else {
+              participantsHTML = `
+                <div class="participants-section">
+                  <h5>Participants</h5>
+                  <ul class="participants-list">
+                    <li><em>No participants yet.</em></li>
+                  </ul>
+                </div>
+              `;
+            }
+
+            card.innerHTML = `
+              <h4>${name}</h4>
+              <p>${details.description}</p>
+              <p><strong>Schedule:</strong> ${details.schedule}</p>
+              <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
+              ${participantsHTML}
+            `;
+
+            container.appendChild(card);
+        });
+    }
+    </script>
+
+    <style>
+      .activity-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    max-width: 400px;
+    transition: box-shadow 0.2s;
+}
+.activity-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+.participants-section {
+    margin-top: 1.2rem;
+    background: #f7f9fc;
+    border-radius: 8px;
+    padding: 1rem;
+}
+.participants-section h3 {
+    margin-top: 0;
+    font-size: 1.1rem;
+    color: #2a4d7a;
+}
+.participants-list {
+    margin: 0.5rem 0 0 1.2rem;
+    padding: 0;
+    list-style-type: disc;
+    color: #444;
+}
+.participants-list li {
+    margin-bottom: 0.3rem;
+    font-size: 0.98rem;
+}
+    </style>
   </body>
 </html>
